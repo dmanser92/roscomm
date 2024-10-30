@@ -1,0 +1,50 @@
+services:
+  nginx_first_proxy:
+    image: nginx:latest
+    container_name: nginx_first_proxy
+    volumes:
+      - ./nginx/first_proxy.conf:/etc/nginx/nginx.conf
+      - ./certs/self-signed.crt:/etc/nginx/ssl/self-signed.crt
+      - ./certs/self-signed.key:/etc/nginx/ssl/self-signed.key
+    ports:
+      - "443:443"
+    networks:
+      - company-network
+      - av-network
+
+  nginx_second_proxy:
+    image: nginx:latest
+    container_name: nginx_second_proxy
+    volumes:
+      - ./nginx/second_proxy.conf:/etc/nginx/nginx.conf
+      - ./certs/self-signed.crt:/etc/nginx/ssl/self-signed.crt
+      - ./certs/self-signed.key:/etc/nginx/ssl/self-signed.key
+    networks:
+      - av-network
+
+  fileserver:
+    image: nginx:latest
+    container_name: fileserver
+    volumes:
+      - ./static_files:/usr/share/nginx/html
+    ports:
+      - "80:80"
+    networks:
+      - av-network
+
+  master-talker:
+    build: ./talker
+    container_name: talker
+    environment:
+      - "ROS_HOSTNAME=talker"
+      - "ROS_MASTER_URI=http://127.0.0.1:11311"
+    command: |
+      /bin/bash -c "roscore & source /opt/ros/noetic/setup.bash && sleep 10 && roslaunch rosbridge_server rosbridge_websocket.launch & sleep 10 && rostopic pub -r 2 /chatter std_msgs/String 'data: hello world'"
+    networks:
+      - av-network
+    ports:
+      - "9090:9090"
+
+networks:
+  company-network:
+  av-network:

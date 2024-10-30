@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { padding: 8px; margin: 5px 0; }
+        #logs { border: 1px solid #ddd; padding: 10px; height: 200px; overflow-y: auto; background: #f9f9f9; }
+        .error { color: red; }
+        #network-diagram { border: 1px solid #ddd; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>WebSocket Connection Tester</h2>
+    
+    <label for="ws-url">WebSocket URL:</label>
+    <input type="text" id="ws-url" value="wss://127.0.0.1/vsr/talker/" placeholder="Enter ws:// or wss:// URL">
+    
+    <label for="ws-topic">Topic to Subscribe:</label>
+    <input type="text" id="ws-topic" value="/chatter" placeholder="Enter topic name">
+    
+    <button onclick="openWebSocket()">Open WebSocket Connection</button>
+    <button onclick="closeWebSocket()">Close WebSocket Connection</button>
+    <button onclick="subscribeToTopic()">Subscribe to Topic</button>
+
+    <h3>Logs</h3>
+    <div id="logs"></div>
+
+    <h3>Network Diagram</h3>
+    <div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;app.diagrams.net\&quot; agent=\&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36\&quot; version=\&quot;24.8.2\&quot;&gt;&lt;diagram name=\&quot;Page-1\&quot; id=\&quot;tZFbr_b_WS93wPz5__kQ\&quot;&gt;&lt;mxGraphModel dx=\&quot;1434\&quot; dy=\&quot;792\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;1\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;850\&quot; pageHeight=\&quot;1100\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;&gt;&lt;root&gt;&lt;mxCell id=\&quot;0\&quot;/&gt;&lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot;/&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-7\&quot; value=\&quot;HTTPS/WSS\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;UU-3y4Z5HLwFU6bkvq18-1\&quot; target=\&quot;UU-3y4Z5HLwFU6bkvq18-2\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-11\&quot; value=\&quot;HTTP\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;UU-3y4Z5HLwFU6bkvq18-1\&quot; target=\&quot;UU-3y4Z5HLwFU6bkvq18-6\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;Array as=\&quot;points\&quot;&gt;&lt;mxPoint x=\&quot;120\&quot; y=\&quot;200\&quot;/&gt;&lt;/Array&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-12\&quot; value=\&quot;WS\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;UU-3y4Z5HLwFU6bkvq18-1\&quot; target=\&quot;UU-3y4Z5HLwFU6bkvq18-4\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;&lt;Array as=\&quot;points\&quot;&gt;&lt;mxPoint x=\&quot;120\&quot; y=\&quot;540\&quot;/&gt;&lt;/Array&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-1\&quot; value=\&quot;Client\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;60\&quot; y=\&quot;340\&quot; width=\&quot;120\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-8\&quot; value=\&quot;HTTPS/WSS\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;UU-3y4Z5HLwFU6bkvq18-2\&quot; target=\&quot;UU-3y4Z5HLwFU6bkvq18-3\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-2\&quot; value=\&quot;First proxy\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;320\&quot; y=\&quot;340\&quot; width=\&quot;120\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-9\&quot; value=\&quot;WS\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;UU-3y4Z5HLwFU6bkvq18-3\&quot; target=\&quot;UU-3y4Z5HLwFU6bkvq18-4\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-10\&quot; value=\&quot;HTTP\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;UU-3y4Z5HLwFU6bkvq18-3\&quot; target=\&quot;UU-3y4Z5HLwFU6bkvq18-6\&quot;&gt;&lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-3\&quot; value=\&quot;Second proxy\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;588\&quot; y=\&quot;340\&quot; width=\&quot;120\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-4\&quot; value=\&quot;ROS Talker\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;588\&quot; y=\&quot;510\&quot; width=\&quot;120\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;mxCell id=\&quot;UU-3y4Z5HLwFU6bkvq18-6\&quot; value=\&quot;Fileserver\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;&lt;mxGeometry x=\&quot;588\&quot; y=\&quot;170\&quot; width=\&quot;120\&quot; height=\&quot;60\&quot; as=\&quot;geometry\&quot;/&gt;&lt;/mxCell&gt;&lt;/root&gt;&lt;/mxGraphModel&gt;&lt;/diagram&gt;&lt;/mxfile&gt;&quot;,&quot;toolbar&quot;:&quot;pages zoom layers lightbox&quot;,&quot;page&quot;:0}"></div>
+    <script type="text/javascript" src="https://app.diagrams.net/js/viewer-static.min.js"></script>
+
+    <script>
+        let client;
+
+        function logMessage(message, isError = false) {
+            const logDiv = document.getElementById('logs');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            if (isError) messageElement.classList.add('error');
+            logDiv.appendChild(messageElement);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function openWebSocket() {
+            const url = document.getElementById('ws-url').value;
+            client = new WebSocket(url);
+
+            client.onopen = () => {
+                logMessage("WebSocket connection opened.");
+            };
+
+            client.onmessage = (event) => {
+                logMessage(`Message received: ${event.data}`);
+            };
+
+            client.onerror = (error) => {
+                logMessage("WebSocket error: " + error.message, true);
+            };
+
+            client.onclose = () => {
+                logMessage("WebSocket connection closed.");
+            };
+        }
+
+        function closeWebSocket() {
+            if (client) {
+                client.close();
+                logMessage("WebSocket connection manually closed.");
+            } else {
+                logMessage("No WebSocket connection to close.", true);
+            }
+        }
+
+        function subscribeToTopic() {
+            const topic = document.getElementById('ws-topic').value;
+            if (client && client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({
+                    op: "subscribe",
+                    topic: topic,
+                }));
+                logMessage(`Subscribed to topic: ${topic}`);
+            } else {
+                logMessage("WebSocket connection is not open. Unable to subscribe.", true);
+            }
+        }
+    </script>
+
+</body>
+</html>
