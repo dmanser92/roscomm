@@ -1,32 +1,40 @@
 services:
-  nginx_first_proxy:
-    image: nginx:latest
-    container_name: nginx_first_proxy
-    volumes:
-      - ./nginx/first_proxy.conf:/etc/nginx/nginx.conf
-      - ./certs/self-signed.crt:/etc/nginx/ssl/self-signed.crt
-      - ./certs/self-signed.key:/etc/nginx/ssl/self-signed.key
+  caddy_first_proxy:
+    image: caddy:latest
+    container_name: caddy_first_proxy
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
     ports:
       - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/first_proxy/Caddyfile:/etc/caddy/Caddyfile
+      - ./certs/self-signed.crt:/etc/caddy/certs/self-signed.crt
+      - ./certs/self-signed.key:/etc/caddy/certs/self-signed.key
     networks:
       - company-network
       - av-network
 
-  nginx_second_proxy:
-    image: nginx:latest
-    container_name: nginx_second_proxy
+  caddy_second_proxy:
+    image: caddy:latest
+    container_name: caddy_second_proxy
     volumes:
-      - ./nginx/second_proxy.conf:/etc/nginx/nginx.conf
-      - ./certs/self-signed.crt:/etc/nginx/ssl/self-signed.crt
-      - ./certs/self-signed.key:/etc/nginx/ssl/self-signed.key
+      - ./caddy/second_proxy/Caddyfile:/etc/caddy/Caddyfile
+      - ./certs/self-signed.crt:/etc/caddy/certs/self-signed.crt
+      - ./certs/self-signed.key:/etc/caddy/certs/self-signed.key
     networks:
       - av-network
 
-  fileserver:
-    image: nginx:latest
-    container_name: fileserver
+  caddy_fileserver:
+    image: caddy:latest
+    container_name: caddy_fileserver
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
     volumes:
-      - ./static_files:/usr/share/nginx/html
+      - ./caddy/fileserver/Caddyfile:/etc/caddy/Caddyfile
+      - ./static_files:/var/www/files
     ports:
       - "80:80"
     networks:

@@ -1,0 +1,26 @@
+:443 {
+    tls /etc/caddy/certs/self-signed.crt /etc/caddy/certs/self-signed.key
+
+    # WebSocket reverse proxy route
+    handle_path /talker/* {
+        uri strip_prefix /talker
+        reverse_proxy http://talker:9090 {
+            header_up Host {host}:9090
+            header_up X-Real-IP {remote}
+            header_up Connection "upgrade"
+            header_up Upgrade "websocket"
+        }
+    }
+
+    # Static file server reverse proxy route
+    handle_path /files/* {
+        uri strip_prefix /files
+        reverse_proxy http://caddy_fileserver:80 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+        }
+    }
+
+    # Catch-all 404 for unknown paths
+    respond "404 - Not Found" 404
+}

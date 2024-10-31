@@ -1,0 +1,18 @@
+:443 {
+    tls /etc/caddy/certs/self-signed.crt /etc/caddy/certs/self-signed.key
+
+    handle_path /vsr/* {
+        uri strip_prefix /vsr
+        reverse_proxy https://caddy_second_proxy:443 {
+            transport http {
+                tls_insecure_skip_verify # Remove in production as the CN matches the hostname there
+            }
+            header_up X-Forwarded-Proto {scheme}
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+        }
+    }
+
+    # Catch-all 404 for unknown paths
+    respond "404 - Not Found" 404
+}
